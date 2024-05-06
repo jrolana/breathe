@@ -1,43 +1,52 @@
 function startTimer(countdown, container) {
-    const countItDown = function () {
-        const currentTime = parseFloat(countdown.textContent);
+    return new Promise((resolve, reject) => {
 
-        if (currentTime > 1) {
-            countdown.textContent = currentTime - 1;
-        } else {
-            container.classList.add("done");
-            clearInterval(timer);
+        const countItDown = function () {
+            const currentTime = parseFloat(countdown.textContent);
+
+            if (currentTime > 1) {
+                countdown.textContent = currentTime - 1;
+            } else {
+                container.classList.add("done");
+                clearInterval(timer);
+                resolve();
+            }
         }
-    }
 
-    const timer = setInterval(countItDown, 1000);
+        const timer = setInterval(countItDown, 1000);
+    })
 }
 
-const inhaleBtn = document.getElementById("inhale-btn");
+function breathingDone(startBtn) {
+    startBtn.classList.add("done");
+
+    const description = document.querySelector("p");
+    description.textContent = "Congratulations on completing your breathing exercise! Taking this time for yourself is a wonderful step towards nurturing your mental well-being. Keep breathing, keep thriving!";
+    description.style.width = "400px";
+    description.style.marginTop = "-100px";
+}
+
+const startBtn = document.getElementById("start-btn");
 const inhaleContainer = document.getElementById("inhale-container");
-inhaleBtn.onclick = () => {
-    const inhaleCountdown = document.getElementById("inhale-countdown");
 
-    startTimer(inhaleCountdown, inhaleContainer);
-}
-
-const holdBtn = document.getElementById("hold-btn");
 const holdContainer = document.getElementById("hold-container");
-holdBtn.onclick = () => {
-    const holdCountdown = document.getElementById("hold-countdown");
 
-    startTimer(holdCountdown, holdContainer);
-}
-
-const exhaleBtn = document.getElementById("exhale-btn");
 const exhaleContainer = document.getElementById("exhale-container");
-exhaleBtn.onclick = () => {
-    const exhaleCountdown = document.getElementById("exhale-countdown");
 
-    startTimer(exhaleCountdown, exhaleContainer);
+const inhaleCountdown = document.getElementById("inhale-countdown");
+const holdCountdown = document.getElementById("hold-countdown");
+const exhaleCountdown = document.getElementById("exhale-countdown");
+
+startBtn.onclick = async () => {
+    startBtn.textContent = "INHALE";
+    await startTimer(inhaleCountdown, inhaleContainer);
+    startBtn.textContent = "HOLD";
+    await startTimer(holdCountdown, holdContainer);
+    startBtn.textContent = "EXHALE";
+    await startTimer(exhaleCountdown, exhaleContainer);
+
+    breathingDone(startBtn);
 }
-
-
 
 
 
